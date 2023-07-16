@@ -1,0 +1,23 @@
+[package]
+name = "dotenv-vault"
+version = "0.1.1"
+description = "An extension to dotenvy supporting .env.vault files"
+homepage = "https://github.com/Minebomber/dotenv-vault-rs"
+repository = "https://github.com/Minebomber/dotenv-vault-rs"
+readme = "README.md"
+keywords = ["dotenv", "env", "environment", "settings", "vault"]
+categories = ["config"]
+license = "MIT"
+edition = "2021"
+rust-version = "1.64.0"
+
+[dependencies]
+aes-gcm = "0.10.2"
+base64 = "0.21.2"
+dotenvy = "0.15.7"
+hex = "0.4.3"
+url = "2.4.0"
+
+[dev-dependencies]
+serial_test = "2.0.0"
+tempfile = "3.7.0"
