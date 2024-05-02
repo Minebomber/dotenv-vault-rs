@@ -31,15 +31,35 @@ fn dotenv_vault_cli() {
         assert_eq!(String::from_utf8(output.stdout).unwrap(), "zeta\n");
     }
 
+    env::set_current_dir(&cwd).unwrap();
+
     {
         env::set_var("ALPHA", "beta");
 
-        // Run the CLI program with dotenv-vault run --override -- <program> <arguments>
+        // override the existing environment variables and specify the current working directory
         let mut cmd = Command::cargo_bin("dotenv-vault").unwrap();
         if cfg!(windows) {
-            cmd.args(["run", "--override", "--", "cmd", "/C", "echo %ALPHA%"]);
+            cmd.args([
+                "run",
+                "--cwd",
+                tmp.path().to_string_lossy().as_ref(),
+                "--override",
+                "--",
+                "cmd",
+                "/C",
+                "echo %ALPHA%",
+            ]);
         } else {
-            cmd.args(["run", "--override", "--", "bash", "-c", "printenv ALPHA"]);
+            cmd.args([
+                "run",
+                "--cwd",
+                tmp.path().to_string_lossy().as_ref(),
+                "--override",
+                "--",
+                "bash",
+                "-c",
+                "printenv ALPHA",
+            ]);
         }
 
         cmd.assert().success();

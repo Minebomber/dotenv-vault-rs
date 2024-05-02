@@ -31,6 +31,12 @@ cargo install dotenv-vault --features cli
 dotenv-vault run -- some_program arg1 arg2
 ```
 
+or run at a different working directory that contains the `.env.vault` and override existing environment variables:
+
+```shell
+dotenv-vault run --cwd ./some_folder --override -- some_program arg1 arg2
+```
+
 ## Install
 
 ```shell

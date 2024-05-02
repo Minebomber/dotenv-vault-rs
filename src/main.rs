@@ -1,5 +1,6 @@
 use argh::FromArgs;
 use std::env;
+use std::path::PathBuf;
 use std::process::{exit, Command, Stdio};
 
 #[derive(FromArgs, PartialEq, Debug)]
@@ -28,6 +29,10 @@ struct Run {
     /// whether to override the existing environment variables
     override_: bool,
 
+    #[argh(option)]
+    /// current working directory to run the program in
+    cwd: Option<PathBuf>,
+
     #[argh(positional)]
     /// the program to run
     program: String,
@@ -43,6 +48,7 @@ enum CLIError {
     EnvLoad = 1,
     EnvOverrideLoad = 2,
     ProgramExecution = 3,
+    CwdChange = 4,
 }
 
 fn main() {
@@ -50,6 +56,15 @@ fn main() {
 
     match opts.commands {
         Commands::Run(run_opts) => {
+            let current_cwd = env::current_dir().unwrap();
+
+            if let Some(given_cwd) = run_opts.cwd {
+                env::set_current_dir(&given_cwd).unwrap_or_else(|err| {
+                    eprintln!("Failed to change the current working directory: {}", err);
+                    exit(CLIError::CwdChange as i32);
+                });
+            }
+
             // Load the .env.vault file
             if run_opts.override_ {
                 dotenv_vault::dotenv_override().unwrap_or_else(|err| {
@@ -75,6 +90,12 @@ fn main() {
                     eprintln!("Failed to execute program: {}", err);
                     exit(CLIError::ProgramExecution as i32);
                 });
+
+            // Restore the current working directory
+            env::set_current_dir(current_cwd).unwrap_or_else(|err| {
+                eprintln!("Failed to change the current working directory: {}", err);
+                exit(CLIError::CwdChange as i32);
+            });
 
             if !output.status.success() {
                 exit(
