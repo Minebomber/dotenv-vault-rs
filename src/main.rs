@@ -79,7 +79,7 @@ fn main() {
             };
 
             // Run the specified program with the specified arguments
-            let output = Command::new(run_opts.program)
+            let output = Command::new(&run_opts.program)
                 .args(run_opts.program_args)
                 .envs(env::vars())
                 .stdin(Stdio::inherit())
@@ -87,7 +87,7 @@ fn main() {
                 .stderr(Stdio::inherit())
                 .output()
                 .unwrap_or_else(|err| {
-                    eprintln!("Failed to execute program: {}", err);
+                    eprintln!("Failed to execute program {}: {}", run_opts.program, err);
                     exit(CLIError::ProgramExecution as i32);
                 });
 
