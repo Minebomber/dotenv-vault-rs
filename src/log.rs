@@ -7,7 +7,7 @@ macro_rules! log_fn {
         where
             T: Display,
         {
-            println!(
+            eprintln!(
                 "[dotenv-vault@{}][{}] {}",
                 env!("CARGO_PKG_VERSION"),
                 $level,
