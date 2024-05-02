@@ -11,8 +11,19 @@ license = "MIT"
 edition = "2021"
 rust-version = "1.64.0"
 
+[[bin]]
+name = "dotenv-vault"
+required-features = ["cli"]
+
+[lib]
+
+[features]
+default = []
+cli = ["dep:argh"]
+
 [dependencies]
 aes-gcm = "0.10.2"
+argh = { version = "0.1.12", optional = true }
 base64 = "0.21.2"
 dotenvy = "0.15.7"
 hex = "0.4.3"

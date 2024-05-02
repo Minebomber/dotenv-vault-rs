@@ -35,6 +35,10 @@ jobs:
         with:
           command: test
 
+      - name: Build CLI
+        run: |
+          cargo build --bin dotenv-vault --features=cli
+
   clippy:
     runs-on: ubuntu-latest
     steps:

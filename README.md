@@ -17,6 +17,20 @@ The extended standard lets you load encrypted secrets from your `.env.vault` fil
 * [FAQ](#faq)
 * [Changelog](./CHANGELOG.md)
 
+## Install CLI
+
+The dotenv-vault CLI allows loading the `.env.vault` file and run the given program with the environment variables set.
+
+```shell
+cargo install dotenv-vault --features cli
+```
+
+## Usage CLI
+
+```shell
+dotenv-vault run -- some_program arg1 arg2
+```
+
 ## Install
 
 ```shell
