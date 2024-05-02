@@ -1,5 +1,4 @@
 use argh::FromArgs;
-use dotenv_vault::dotenv;
 use std::env;
 use std::process::{exit, Command};
 
@@ -13,22 +12,6 @@ use std::process::{exit, Command};
 struct Opts {
     #[argh(subcommand)]
     commands: Commands,
-
-    #[argh(switch, long = "override")]
-    /// whether to override the existing environment variables
-    override_: bool,
-
-    #[argh(positional)]
-    /// the separator
-    separator: String,
-
-    #[argh(positional)]
-    /// the program to run
-    program: String,
-
-    #[argh(positional)]
-    /// the arguments to pass to the program
-    program_args: Vec<String>,
 }
 
 #[derive(FromArgs, PartialEq, Debug)]
@@ -40,55 +23,64 @@ enum Commands {
 #[derive(FromArgs, PartialEq, Debug)]
 /// Load the .env.vault file and run the specified program with the specified arguments.
 #[argh(subcommand, name = "run")]
-struct Run {}
+struct Run {
+    #[argh(switch, long = "override")]
+    /// whether to override the existing environment variables
+    override_: bool,
+
+    #[argh(positional)]
+    /// the program to run
+    program: String,
+
+    #[argh(positional)]
+    /// the arguments to pass to the program
+    program_args: Vec<String>,
+}
 
 #[derive(Debug)]
 #[repr(i32)]
 enum CLIError {
-    Separator,
-    EnvLoad,
-    EnvOverrideLoad,
-    ProgramExecution,
+    EnvLoad = 1,
+    EnvOverrideLoad = 2,
+    ProgramExecution = 3,
 }
 
 fn main() {
     let opts = argh::from_env::<Opts>();
 
-    // Check if the separator is correct
-    if opts.separator != "--" {
-        eprintln!("Invalid separator: {}. Expected --", opts.separator);
-        exit(CLIError::Separator as i32);
-    }
+    match opts.commands {
+        Commands::Run(run_opts) => {
+            // Load the .env.vault file
+            if run_opts.override_ {
+                dotenv_vault::dotenv_override().unwrap_or_else(|err| {
+                    eprintln!("Failed to load env: {}", err);
+                    exit(CLIError::EnvOverrideLoad as i32);
+                });
+            } else {
+                dotenv_vault::dotenv().unwrap_or_else(|err| {
+                    eprintln!("Failed to load env: {}", err);
+                    exit(CLIError::EnvLoad as i32);
+                });
+            };
 
-    // Load the .env.vault file
-    if opts.override_ {
-        dotenv().unwrap_or_else(|err| {
-            eprintln!("{}", err);
-            exit(CLIError::EnvOverrideLoad as i32);
-        });
-    } else {
-        dotenv_vault::dotenv().unwrap_or_else(|err| {
-            eprintln!("{}", err);
-            exit(CLIError::EnvLoad as i32);
-        });
-    };
+            // Run the specified program with the specified arguments
+            let output = Command::new(run_opts.program)
+                .args(run_opts.program_args)
+                .envs(env::vars())
+                .output()
+                .unwrap_or_else(|err| {
+                    eprintln!("Failed to execute program: {}", err);
+                    exit(CLIError::ProgramExecution as i32);
+                });
 
-    // Run the specified program with the specified arguments
-    let output = Command::new(opts.program)
-        .args(opts.program_args)
-        .envs(env::vars())
-        .output()
-        .unwrap_or_else(|err| {
-            eprintln!("Failed to execute program: {}", err);
-            exit(CLIError::ProgramExecution as i32);
-        });
-
-    if !output.status.success() {
-        exit(
-            output
-                .status
-                .code()
-                .unwrap_or(CLIError::ProgramExecution as i32),
-        );
+            if !output.status.success() {
+                exit(
+                    output
+                        .status
+                        .code()
+                        .unwrap_or(CLIError::ProgramExecution as i32),
+                );
+            }
+        }
     }
 }
