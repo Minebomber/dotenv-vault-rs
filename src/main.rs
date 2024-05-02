@@ -1,6 +1,6 @@
 use argh::FromArgs;
 use std::env;
-use std::process::{exit, Command};
+use std::process::{exit, Command, Stdio};
 
 #[derive(FromArgs, PartialEq, Debug)]
 /// The CLI program to load the .env.vault file and run the specified program with the specified arguments.
@@ -67,6 +67,9 @@ fn main() {
             let output = Command::new(run_opts.program)
                 .args(run_opts.program_args)
                 .envs(env::vars())
+                .stdin(Stdio::inherit())
+                .stdout(Stdio::inherit())
+                .stderr(Stdio::inherit())
                 .output()
                 .unwrap_or_else(|err| {
                     eprintln!("Failed to execute program: {}", err);
