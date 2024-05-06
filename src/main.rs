@@ -59,7 +59,7 @@ fn main() {
             let current_cwd = env::current_dir().unwrap();
 
             if let Some(given_cwd) = run_opts.cwd {
-                env::set_current_dir(&given_cwd).unwrap_or_else(|err| {
+                env::set_current_dir(given_cwd).unwrap_or_else(|err| {
                     eprintln!("Failed to change the current working directory: {}", err);
                     exit(CLIError::CwdChange as i32);
                 });

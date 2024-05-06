@@ -8,7 +8,7 @@ fn dotenv_vault_cli() {
 
     let tmp = tempdir().unwrap();
     let vault_path = tmp.path().join(".env.vault");
-    let mut vault = File::create(&vault_path).unwrap();
+    let mut vault = File::create(vault_path).unwrap();
     vault
             .write_all("DOTENV_VAULT_PRODUCTION=\"s7NYXa809k/bVSPwIAmJhPJmEGTtU0hG58hOZy7I0ix6y5HP8LsHBsZCYC/gw5DDFy5DgOcyd18R\"".as_bytes())
             .unwrap();
