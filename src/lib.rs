@@ -74,7 +74,7 @@ mod tests {
 
         let tmp = tempdir().unwrap();
         let vault_path = tmp.path().join(".env.vault");
-        let mut vault = File::create(&vault_path).unwrap();
+        let mut vault = File::create(vault_path).unwrap();
         vault
             .write_all("DOTENV_VAULT_PRODUCTION=\"s7NYXa809k/bVSPwIAmJhPJmEGTtU0hG58hOZy7I0ix6y5HP8LsHBsZCYC/gw5DDFy5DgOcyd18R\"".as_bytes())
             .unwrap();
@@ -101,7 +101,7 @@ mod tests {
     fn dotenv_fallback_to_env() {
         let tmp = tempdir().unwrap();
         let env_path = tmp.path().join(".env");
-        let mut env = File::create(&env_path).unwrap();
+        let mut env = File::create(env_path).unwrap();
         env.write_all("TESTKEY=\"from .env\"".as_bytes()).unwrap();
         env.sync_all().unwrap();
 
@@ -127,7 +127,7 @@ mod tests {
 
         let tmp = tempdir().unwrap();
         let vault_path = tmp.path().join(".env.vault");
-        let mut vault = File::create(&vault_path).unwrap();
+        let mut vault = File::create(vault_path).unwrap();
         vault
             .write_all("DOTENV_VAULT_PRODUCTION=\"s7NYXa809k/bVSPwIAmJhPJmEGTtU0hG58hOZy7I0ix6y5HP8LsHBsZCYC/gw5DDFy5DgOcyd18R\"".as_bytes())
             .unwrap();
@@ -156,7 +156,7 @@ mod tests {
     fn dotenv_override_fallback_to_env() {
         let tmp = tempdir().unwrap();
         let env_path = tmp.path().join(".env");
-        let mut env = File::create(&env_path).unwrap();
+        let mut env = File::create(env_path).unwrap();
         env.write_all("TESTKEY=\"from .env\"".as_bytes()).unwrap();
         env.sync_all().unwrap();
 

@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rust: [stable, beta, nightly, 1.64.0]
+        rust: [stable, beta, nightly, 1.73.0]
     steps:
       - uses: actions/checkout@v3
 
@@ -29,6 +29,10 @@ jobs:
         with:
           command: test
           args: --no-run
+
+      - name: Build CLI
+        run: |
+          cargo build --bin dotenv-vault --features=cli
 
       - name: Run tests
         uses: actions-rs/cargo@v1

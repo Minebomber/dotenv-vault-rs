@@ -2,7 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/dotenv-vault.svg)](https://crates.io/crates/dotenv-vault)
 [![msrv
-1.64.0](https://img.shields.io/badge/msrv-1.64.0-dea584.svg?logo=rust)](https://github.com/rust-lang/rust/releases/tag/1.64.0)
+1.73.0](https://img.shields.io/badge/msrv-1.73.0-dea584.svg?logo=rust)](https://github.com/rust-lang/rust/releases/tag/1.73.0)
 [![ci](https://github.com/Minebomber/dotenv-vault-rs/actions/workflows/ci.yml/badge.svg)](https://github.com/Minebomber/dotenv-vault-rs/actions/workflows/ci.yml)
 [![docs](https://img.shields.io/docsrs/dotenv-vault?logo=docs.rs)](https://docs.rs/dotenv-vault/)
 
@@ -16,6 +16,26 @@ The extended standard lets you load encrypted secrets from your `.env.vault` fil
 * [Multiple Environments](#manage-multiple-environments)
 * [FAQ](#faq)
 * [Changelog](./CHANGELOG.md)
+
+## Install CLI
+
+The dotenv-vault CLI allows loading the `.env.vault` file and run the given program with the environment variables set.
+
+```shell
+cargo install dotenv-vault --features cli
+```
+
+## Usage CLI
+
+```shell
+dotenv-vault run -- some_program arg1 arg2
+```
+
+or run at a different working directory that contains the `.env.vault` and override existing environment variables:
+
+```shell
+dotenv-vault run --cwd ./some_folder --override -- some_program arg1 arg2
+```
 
 ## Install
 
