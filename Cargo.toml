@@ -1,6 +1,6 @@
 [package]
 name = "dotenv-vault"
-version = "0.1.1"
+version = "0.1.2"
 description = "An extension to dotenvy supporting .env.vault files"
 homepage = "https://github.com/Minebomber/dotenv-vault-rs"
 repository = "https://github.com/Minebomber/dotenv-vault-rs"
